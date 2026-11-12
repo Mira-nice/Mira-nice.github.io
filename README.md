@@ -17,4 +17,6 @@ Toutes via Wikimedia Commons :
 - « Card catalogue drawers », Carolina Prysyazhnyuk, CC BY-SA 2.0
 - « Cotonou (Dahomey). Maison de commerce française », domaine public
 
+Capture du site Clignotant (img/clignotant-site.webp) : réalisation personnelle.
+
 Police Boska (Indian Type Foundry, licence ITF Free Font License) et Atkinson Hyperlegible (Braille Institute, SIL Open Font License).
