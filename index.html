@@ -14,6 +14,9 @@
 <meta property="og:locale" content="fr_FR">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23164b58'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='28' fill='%23ffffff' text-anchor='middle'%3EMA%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#dedad3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151412" media="(prefers-color-scheme: dark)">
+<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <style>:root{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0}[hidden]{display:none!important}</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,6 +41,9 @@
   --accent-ink: #ffffff;
   --mark: #bfe0e6;
   --accent-light: #7cc4d4;
+  --accent-hover: #0c3039;
+  --object: #0a0a0a;
+  --object-ink: #efefec;
 
   /* Boska pour les grands titres seulement ; Atkinson Hyperlegible pour tout ce qui se lit */
   --face: "Glyphes", "Boska", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
@@ -53,6 +59,19 @@
   --gap: 12px;
   --ease: cubic-bezier(.2, .7, .2, 1);
   color-scheme: light;
+}
+/* Mode sombre : l'inventaire de nuit. Suit le système ; le bouton de la barre du haut force un choix, mémorisé. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #151412; --surface: #201e1b; --card: #2a2723; --ink: #ece8e1; --muted: #cfc8bd;
+    --accent: #8fd0de; --accent-ink: #0b1f24; --accent-hover: #b4e2ec; --mark: #2a4d55; --accent-light: #8fd0de;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #151412; --surface: #201e1b; --card: #2a2723; --ink: #ece8e1; --muted: #cfc8bd;
+  --accent: #8fd0de; --accent-ink: #0b1f24; --accent-hover: #b4e2ec; --mark: #2a4d55; --accent-light: #8fd0de;
+  color-scheme: dark;
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -85,7 +104,7 @@ img { display: block; max-width: 100%; }
 
 .stage {
   position: sticky; top: var(--gap); height: calc(100svh - 2 * var(--gap));
-  overflow: hidden; background: var(--ink);
+  overflow: hidden; background: var(--object);
 }
 .stage img {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
@@ -140,7 +159,7 @@ img { display: block; max-width: 100%; }
   background: var(--accent); color: var(--accent-ink); text-decoration: none; font-size: var(--step-body);
   transition: transform .15s var(--ease), background-color .2s;
 }
-.btn:hover { color: var(--accent-ink); background: #0c3039; }
+.btn:hover { color: var(--accent-ink); background: var(--accent-hover); }
 .btn:active { transform: translateY(1px) scale(.98); }
 
 /* ---------- Sections de lecture ---------- */
@@ -261,7 +280,8 @@ p, li, dd { text-wrap: pretty; }
 .carte.flip { transform: rotateY(180deg); }
 .carte:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }
 .face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; padding: clamp(18px, 4.5%, 30px); display: grid; }
-.front { background: var(--ink); color: var(--bg); grid-template-rows: auto 1fr auto; }
+.front { background: var(--object); color: var(--object-ink); grid-template-rows: auto 1fr auto; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--object-ink) 14%, transparent); }
+.front .role { color: #7cc4d4; }
 .front .row { display: flex; justify-content: space-between; gap: 12px; font-size: var(--step-small); }
 .front .name { align-self: end; font-size: clamp(1.75rem, 1rem + 3vw, 2.75rem); line-height: 1; letter-spacing: -.02em; }
 .front .role { color: var(--accent-light); font-size: var(--step-body); margin-top: 8px; }
@@ -270,6 +290,12 @@ p, li, dd { text-wrap: pretty; }
 .back dt { color: var(--muted); font-weight: 700; }
 .back dd { margin: 0; overflow-wrap: anywhere; }
 .carte-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+/* Bouton clair / sombre */
+.topbar-end { display: flex; justify-content: flex-end; align-items: center; gap: 12px; }
+.theme-btn { all: unset; box-sizing: border-box; display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; color: var(--ink); }
+.theme-btn:hover { background: var(--surface); }
+.theme-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.theme-btn svg { width: 22px; height: 22px; }
 .btn.ghost { background: var(--surface); color: var(--ink); }
 .btn.ghost:hover { background: var(--card); color: var(--ink); }
 
@@ -324,7 +350,7 @@ p, li, dd { text-wrap: pretty; }
         <nav class="topbar" aria-label="Navigation">
           <a href="#projets">Projets</a>
           <span class="wordmark">Fonds MA</span>
-          <a href="#contact">Contact</a>
+          <span class="topbar-end"><a href="#contact">Contact</a><button class="theme-btn" type="button" id="theme-btn" aria-pressed="false" aria-label="Passer en mode sombre"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button></span>
         </nav>
         <div class="opening">
           <h1 class="rise">Miranice Adjovi</h1>
@@ -497,6 +523,13 @@ p, li, dd { text-wrap: pretty; }
 
 <script>
 document.documentElement.classList.add('js');
+(function () {
+  var root = document.documentElement, btn = document.getElementById('theme-btn'), mq = matchMedia('(prefers-color-scheme: dark)');
+  function dark() { var t = root.getAttribute('data-theme'); return t ? t === 'dark' : mq.matches; }
+  function sync() { var d = dark(); btn.setAttribute('aria-pressed', String(d)); btn.setAttribute('aria-label', d ? 'Passer en mode clair' : 'Passer en mode sombre'); }
+  btn.addEventListener('click', function () { var t = dark() ? 'light' : 'dark'; root.setAttribute('data-theme', t); try { localStorage.setItem('theme', t); } catch (e) {} sync(); });
+  mq.addEventListener('change', sync); sync();
+})();
 (function () {
   var projets = [
     { cote: 'MA 1/1', nom: 'ARchi-nuM', genre: 'Application d\'archivage', annee: '2026',
